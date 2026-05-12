@@ -180,28 +180,6 @@ textarea:focus-visible,
   padding: 18px;
 }
 
-.about-panel {
-  padding: 16px 18px;
-}
-
-.about-panel p {
-  max-width: 76ch;
-  margin: 8px 0 10px;
-  color: var(--muted);
-  font-size: 0.96rem;
-  line-height: 1.7;
-}
-
-.about-panel a {
-  color: var(--led-on);
-  font-weight: 800;
-  text-decoration: none;
-}
-
-.about-panel a:hover {
-  text-decoration: underline;
-}
-
 .matrix-panel {
   display: grid;
   place-items: center;
@@ -343,6 +321,7 @@ textarea:focus-visible,
 .editor-cell {
   width: var(--editor-cell-size);
   height: var(--editor-cell-size);
+  min-height: 0;
   border: 0;
   padding: 0;
 }
@@ -416,6 +395,8 @@ textarea:focus-visible,
   grid-template-rows: repeat(16, 6px);
   gap: 1px;
   width: max-content;
+  min-height: 0;
+  padding: 0;
 }
 
 .preview-led {
@@ -504,13 +485,14 @@ textarea:focus-visible,
     grid-template-rows: repeat(16, 1fr);
     width: 100%;
     aspect-ratio: 1;
-    gap: 4px;
+    gap: 3px;
     padding: 6px;
   }
 
   .editor-cell {
     width: auto;
     height: auto;
+    min-height: 0;
   }
 
   .matrix-text {
@@ -519,9 +501,12 @@ textarea:focus-visible,
   }
 
   .editor-actions button,
-  .player-controls button,
   .palette-button {
     flex: 1 1 calc(50% - 8px);
+  }
+
+  .player-controls button {
+    flex: 1 1 100%;
   }
 
   .frame-list {

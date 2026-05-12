@@ -32,7 +32,7 @@ MIT
 
 ## Frame Data
 
-Each frame is a 16x16 LED matrix. `1` means LED on, `0` means LED off.
+Each frame is a 16x16 LED matrix. `1` means LED on, `0` means LED off. The app source of truth is `src/frame.json`.
 
 ### frame 1
 

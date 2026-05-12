@@ -1,136 +1,8 @@
 import './styles.css';
+import walkingFrameRows from './frame.json';
 
 const GRID_SIZE = 16;
 const FRAME_DELAY = 250;
-
-const walkingFrameRows = [
-  [
-    '0000011000000000',
-    '0000111100000000',
-    '0000011000000000',
-    '0000001100000000',
-    '0000001111100000',
-    '0000001111110000',
-    '0000001110001000',
-    '0000010111000000',
-    '0000000011000000',
-    '0000000111100000',
-    '0000000110111000',
-    '0000001100001100',
-    '0000001000000100',
-    '0000111000000100',
-    '0000000000000000',
-    '0000000000000000',
-  ],
-  [
-    '0000001100000000',
-    '0000011110000000',
-    '0000001100000000',
-    '0000000110000000',
-    '0000000111100000',
-    '0000000111110000',
-    '0000000111001000',
-    '0000001011101000',
-    '0000000011100000',
-    '0000000011100000',
-    '0000000110110000',
-    '0000000100011000',
-    '0000000010001000',
-    '0000001110011000',
-    '0000000000000000',
-    '0000000000000000',
-  ],
-  [
-    '0000011000000000',
-    '0000111100000000',
-    '0000011000000000',
-    '0000001100000000',
-    '0000001111000000',
-    '0000001111100000',
-    '0000000110100000',
-    '0000000111100000',
-    '0000001011000000',
-    '0000000111000000',
-    '0000001101100000',
-    '0000011000110000',
-    '0000001100010000',
-    '0000000100110000',
-    '0000011100000000',
-    '0000000000000000',
-  ],
-  [
-    '0000011000000000',
-    '0000111100000000',
-    '0000011000000000',
-    '0000001100000000',
-    '0000001110000000',
-    '0000001111000000',
-    '0000000111100000',
-    '0000000110100000',
-    '0000001011000000',
-    '0000000111000000',
-    '0000001111100000',
-    '0000001100110000',
-    '0000000110010000',
-    '0000000010110000',
-    '0000001110100000',
-    '0000000000000000',
-  ],
-  [
-    '0000011000000000',
-    '0000111100000000',
-    '0000011000000000',
-    '0000001100000000',
-    '0000001110000000',
-    '0000001110000000',
-    '0000000111000000',
-    '0000000111000000',
-    '0000000011000000',
-    '0000000111000000',
-    '0000000111100000',
-    '0000000011100000',
-    '0000000011100000',
-    '0000000000100000',
-    '0000000011100000',
-    '0000000000000000',
-  ],
-  [
-    '0000001100000000',
-    '0000011110000000',
-    '0000001100000000',
-    '0000000110000000',
-    '0000000111100000',
-    '0000000111110000',
-    '0000001011010000',
-    '0000000011110000',
-    '0000000001100000',
-    '0000000011100000',
-    '0000000111100000',
-    '0000000100110000',
-    '0000000010011000',
-    '0000011100000100',
-    '0000000000011100',
-    '0000000000000000',
-  ],
-  [
-    '0000011000000000',
-    '0000111100000000',
-    '0000011000000000',
-    '0000001100000000',
-    '0000001111100000',
-    '0000001111110000',
-    '0000011110010000',
-    '0000110111000000',
-    '0000000011000000',
-    '0000000111100000',
-    '0000001100110000',
-    '0000001100011000',
-    '0000111000001100',
-    '0000000000000100',
-    '0000000000000000',
-    '0000000000000000',
-  ],
-];
 
 let walkingFrames = walkingFrameRows.map(rowsToMatrix);
 let frameIndex = 0;
@@ -246,8 +118,7 @@ const playerMarkup = `
       <div class="led-grid" role="img" aria-label="${t('ledAria')}"></div>
     </div>
     <div class="player-controls">
-      <button class="restart-button" type="button">${t('restart')}</button>
-      <button class="stop-button" type="button">${t('stop')}</button>
+      <button class="play-toggle-button" type="button">${t('stop')}</button>
     </div>
     <div class="palette-panel" aria-label="LED color palette">
       <h2 class="section-title">${t('paletteTitle')}</h2>
@@ -307,16 +178,6 @@ const editorMarkup = `
   </section>
 `;
 
-const aboutMarkup = `
-  <section class="panel about-panel" aria-label="About animated pedestrian signal">
-    <h2 class="section-title">${t('aboutTitle')}</h2>
-    <p>
-      ${t('aboutText')}
-    </p>
-    <a href="https://zh.wikipedia.org/zh-tw/%E5%8B%95%E7%95%AB%E5%BC%8F%E8%A1%8C%E4%BA%BA%E5%B0%88%E7%94%A8%E8%99%9F%E8%AA%8C" target="_blank" rel="noreferrer">${t('aboutLink')}</a>
-  </section>
-`;
-
 app.innerHTML = `
   <div class="app">
     <header class="app-header">
@@ -338,7 +199,6 @@ app.innerHTML = `
     <div class="workspace ${isEditorRoute ? 'workspace-editor' : 'workspace-player'}">
       ${isEditorRoute ? editorMarkup : playerMarkup}
     </div>
-    ${aboutMarkup}
   </div>
 `;
 
@@ -456,9 +316,11 @@ function stopAnimation() {
   updatePlaybackButtons();
 }
 
-function restartPlayback() {
-  stopAnimation();
-  frameIndex = 0;
+function togglePlayback() {
+  if (animationRunning) {
+    stopAnimation();
+    return;
+  }
   startAnimation();
 }
 
@@ -480,13 +342,10 @@ function rebuildFrameOptions() {
 }
 
 function updatePlaybackButtons() {
-  const stopButton = document.querySelector('.stop-button');
-  const restartButton = document.querySelector('.restart-button');
-  if (stopButton) {
-    stopButton.disabled = !animationRunning;
-  }
-  if (restartButton) {
-    restartButton.textContent = animationRunning ? t('restart') : t('play');
+  const playToggleButton = document.querySelector('.play-toggle-button');
+  if (playToggleButton) {
+    playToggleButton.textContent = animationRunning ? t('stop') : t('play');
+    playToggleButton.setAttribute('aria-pressed', String(animationRunning));
   }
 }
 
@@ -708,8 +567,7 @@ function validateFrames(frames) {
   return frames.every((frame, index) => validateFrame(frame, index + 1));
 }
 
-document.querySelector('.restart-button')?.addEventListener('click', restartPlayback);
-document.querySelector('.stop-button')?.addEventListener('click', stopAnimation);
+document.querySelector('.play-toggle-button')?.addEventListener('click', togglePlayback);
 document.querySelectorAll('.palette-button').forEach((button) => {
   button.addEventListener('click', () => applyPalette(Number(button.dataset.palette)));
 });
