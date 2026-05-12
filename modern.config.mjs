@@ -8,7 +8,7 @@ export default defineConfig({
   source: {
     entries: {
       index: {
-        entry: './src/main.js',
+        entry: './src/main.jsx',
         disableMount: true,
       },
     },
