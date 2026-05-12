@@ -40,6 +40,8 @@ const translations = {
     clear: 'Clear',
     shiftLeft: 'Left -1',
     shiftRight: 'Right +1',
+    shiftUp: 'Up -1',
+    shiftDown: 'Down +1',
     addBlank: 'Add Blank',
     duplicateFrame: 'Duplicate Frame',
     delete: 'Delete',
@@ -77,6 +79,8 @@ const translations = {
     clear: '清空',
     shiftLeft: '左移 -1',
     shiftRight: '右移 +1',
+    shiftUp: '上移 -1',
+    shiftDown: '下移 +1',
     addBlank: '新增空白',
     duplicateFrame: '複製影格',
     delete: '刪除',
@@ -161,6 +165,8 @@ const editorMarkup = `
           <button class="clear-frame-button" type="button">${t('clear')}</button>
           <button class="shift-left-button" type="button">${t('shiftLeft')}</button>
           <button class="shift-right-button" type="button">${t('shiftRight')}</button>
+          <button class="shift-up-button" type="button">${t('shiftUp')}</button>
+          <button class="shift-down-button" type="button">${t('shiftDown')}</button>
           <button class="add-frame-button" type="button">${t('addBlank')}</button>
           <button class="duplicate-frame-button" type="button">${t('duplicateFrame')}</button>
           <button class="delete-frame-button" type="button">${t('delete')}</button>
@@ -435,21 +441,22 @@ function clearFrame() {
   syncEditorFromFrame();
 }
 
-function shiftFrame(frame, direction) {
-  return frame.map((row) => {
-    const nextRow = Array(GRID_SIZE).fill(0);
-    row.forEach((value, col) => {
-      const nextCol = col + direction;
-      if (value === 1 && nextCol >= 0 && nextCol < GRID_SIZE) {
-        nextRow[nextCol] = 1;
+function shiftFrame(frame, rowDirection, colDirection) {
+  const nextFrame = blankFrame();
+  frame.forEach((row, rowIndex) => {
+    row.forEach((value, colIndex) => {
+      const nextRow = rowIndex + rowDirection;
+      const nextCol = colIndex + colDirection;
+      if (value === 1 && nextRow >= 0 && nextRow < GRID_SIZE && nextCol >= 0 && nextCol < GRID_SIZE) {
+        nextFrame[nextRow][nextCol] = 1;
       }
     });
-    return nextRow;
   });
+  return nextFrame;
 }
 
-function shiftSelectedFrame(direction) {
-  walkingFrames[selectedFrame] = shiftFrame(walkingFrames[selectedFrame], direction);
+function shiftSelectedFrame(rowDirection, colDirection) {
+  walkingFrames[selectedFrame] = shiftFrame(walkingFrames[selectedFrame], rowDirection, colDirection);
   syncEditorFromFrame();
 }
 
@@ -592,8 +599,10 @@ document.querySelector('.apply-matrix-button')?.addEventListener('click', applyM
 document.querySelector('.copy-matrix-button')?.addEventListener('click', () => copyTextFrom(matrixText));
 document.querySelector('.copy-all-frames-button')?.addEventListener('click', () => copyTextFrom(allFramesText));
 document.querySelector('.clear-frame-button')?.addEventListener('click', clearFrame);
-document.querySelector('.shift-left-button')?.addEventListener('click', () => shiftSelectedFrame(-1));
-document.querySelector('.shift-right-button')?.addEventListener('click', () => shiftSelectedFrame(1));
+document.querySelector('.shift-left-button')?.addEventListener('click', () => shiftSelectedFrame(0, -1));
+document.querySelector('.shift-right-button')?.addEventListener('click', () => shiftSelectedFrame(0, 1));
+document.querySelector('.shift-up-button')?.addEventListener('click', () => shiftSelectedFrame(-1, 0));
+document.querySelector('.shift-down-button')?.addEventListener('click', () => shiftSelectedFrame(1, 0));
 document.querySelector('.add-frame-button')?.addEventListener('click', addBlankFrame);
 document.querySelector('.duplicate-frame-button')?.addEventListener('click', duplicateFrame);
 document.querySelector('.delete-frame-button')?.addEventListener('click', deleteFrame);
