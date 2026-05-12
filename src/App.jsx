@@ -45,6 +45,7 @@ const translations = {
     selected: 'selected',
     moveUp: 'Up',
     moveDown: 'Down',
+    github: 'GitHub',
     selectFrameAria: 'Select frame {number}',
     toggleCellAria: 'Toggle row {row}, column {col}',
     aboutTitle: 'About Xiaoluren',
@@ -83,6 +84,7 @@ const translations = {
     selected: '已選取',
     moveUp: '上移',
     moveDown: '下移',
+    github: 'GitHub',
     selectFrameAria: '選取影格 {number}',
     toggleCellAria: '切換第 {row} 列第 {col} 欄',
     aboutTitle: '關於小綠人',
@@ -360,7 +362,6 @@ export default function App() {
       <header className="app-header">
         <div>
           <h1 className="app-title">{isEditorRoute ? t('editorTitle') : t('playerTitle')}</h1>
-          <div className="app-meta">{t('meta', { count: frames.length })}</div>
         </div>
         <div className="header-actions">
           <nav className="top-menu" aria-label="Primary">
@@ -520,13 +521,23 @@ export default function App() {
       ) : null}
 
       <footer className="app-footer">
-        <label className="language-select-label" htmlFor="language-select">
-          {t('languageLabel')}
-        </label>
-        <select id="language-select" className="language-select" aria-label={t('languageLabel')} value={language} onChange={(event) => setLanguage(event.target.value)}>
-          <option value="zh">繁中</option>
-          <option value="en">EN</option>
-        </select>
+        <div className="footer-controls">
+          <label className="language-select-label" htmlFor="language-select">
+            {t('languageLabel')}
+          </label>
+          <select id="language-select" className="language-select" aria-label={t('languageLabel')} value={language} onChange={(event) => setLanguage(event.target.value)}>
+            <option value="zh">繁中</option>
+            <option value="en">EN</option>
+          </select>
+        </div>
+        <a
+          className="github-link"
+          href="https://github.com/lockys/taiwan-green-pedestian"
+          target="_blank"
+          rel="noreferrer"
+        >
+          {t('github')}
+        </a>
       </footer>
     </div>
   );
