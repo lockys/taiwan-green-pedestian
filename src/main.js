@@ -137,6 +137,14 @@ let frameIndex = 0;
 let selectedFrame = 0;
 let animationTimer = null;
 let animationRunning = false;
+let currentPalette = 0;
+
+const colorPalettes = [
+  { name: '薄荷綠', on: '#c1f0e9', off: '#10221d', glow: 'rgba(193, 240, 233, 0.62)' },
+  { name: '號誌綠', on: '#73ffbf', off: '#0b2117', glow: 'rgba(115, 255, 191, 0.64)' },
+  { name: '青藍綠', on: '#7df8ff', off: '#0b2024', glow: 'rgba(125, 248, 255, 0.58)' },
+  { name: '琥珀', on: '#ffe28a', off: '#241d0b', glow: 'rgba(255, 226, 138, 0.55)' },
+];
 
 const app = document.querySelector('#app');
 const routePath = window.location.pathname.replace(/\/$/, '') || '/';
@@ -150,11 +158,27 @@ const editorHref = `${basePath || ''}/editor`;
 const playerMarkup = `
   <section class="panel player-panel" aria-label="LED animation player">
     <div class="matrix-panel">
-      <div class="led-grid" role="img" aria-label="Animated LED pedestrian"></div>
+      <div class="led-grid" role="img" aria-label="動畫式小綠人 LED 點陣"></div>
     </div>
     <div class="player-controls">
       <span class="status-dot" aria-hidden="true"></span>
-      <button class="restart-button" type="button">Restart Playback</button>
+      <button class="restart-button" type="button">重新播放</button>
+      <button class="stop-button" type="button">停止</button>
+    </div>
+    <div class="palette-panel" aria-label="LED color palette">
+      <h2 class="section-title">LED 色票</h2>
+      <div class="palette-list">
+        ${colorPalettes
+          .map(
+            (palette, index) => `
+              <button class="palette-button${index === currentPalette ? ' is-active' : ''}" type="button" data-palette="${index}">
+                <span class="palette-swatch" style="--swatch-color: ${palette.on}"></span>
+                ${palette.name}
+              </button>
+            `,
+          )
+          .join('')}
+      </div>
     </div>
   </section>
 `;
@@ -162,32 +186,36 @@ const playerMarkup = `
 const editorMarkup = `
   <section class="panel editor-panel" aria-label="16 by 16 matrix editor">
     <div class="editor-header">
-      <h2 class="editor-title">Frame Matrix</h2>
+      <h2 class="editor-title">影格矩陣</h2>
       <div class="frame-tools">
-        <label for="frame-select">Frame</label>
+        <label for="frame-select">影格</label>
         <select id="frame-select" class="frame-select"></select>
       </div>
     </div>
     <div class="editor-body">
-      <div class="editor-grid" aria-label="Clickable frame matrix"></div>
-      <div>
+      <div class="editor-section editor-matrix-section">
+        <h3 class="section-title">LED 點陣</h3>
+        <div class="editor-grid" aria-label="Clickable frame matrix"></div>
+      </div>
+      <div class="editor-section editor-text-section">
+        <h3 class="section-title">矩陣文字</h3>
         <textarea class="matrix-text" spellcheck="false" aria-label="Raw 16 by 16 matrix rows"></textarea>
         <div class="editor-actions">
-          <button class="apply-matrix-button" type="button">Apply Text</button>
-          <button class="copy-matrix-button" type="button">Copy Text</button>
-          <button class="clear-frame-button" type="button">Clear</button>
-          <button class="shift-left-button" type="button">-1 Left</button>
-          <button class="shift-right-button" type="button">+1 Right</button>
-          <button class="add-frame-button" type="button">Add Blank</button>
-          <button class="duplicate-frame-button" type="button">Duplicate</button>
-          <button class="delete-frame-button" type="button">Delete</button>
+          <button class="apply-matrix-button" type="button">套用文字</button>
+          <button class="copy-matrix-button" type="button">複製文字</button>
+          <button class="clear-frame-button" type="button">清空</button>
+          <button class="shift-left-button" type="button">左移 -1</button>
+          <button class="shift-right-button" type="button">右移 +1</button>
+          <button class="add-frame-button" type="button">新增空白</button>
+          <button class="duplicate-frame-button" type="button">複製影格</button>
+          <button class="delete-frame-button" type="button">刪除</button>
         </div>
       </div>
     </div>
     <div class="all-frames">
       <div class="all-frames-header">
-        <h2 class="all-frames-title">All Frames</h2>
-        <button class="copy-all-frames-button" type="button">Copy All</button>
+        <h2 class="all-frames-title">全部影格</h2>
+        <button class="copy-all-frames-button" type="button">全部複製</button>
       </div>
       <div class="frame-list" aria-label="All walking frames"></div>
       <textarea class="all-frames-text" readonly spellcheck="false" aria-label="All frame matrices"></textarea>
@@ -195,21 +223,33 @@ const editorMarkup = `
   </section>
 `;
 
+const aboutMarkup = `
+  <section class="panel about-panel" aria-label="About animated pedestrian signal">
+    <h2 class="section-title">關於小綠人</h2>
+    <p>
+      小綠人是台灣常見的動畫式行人專用號誌，以連續影格呈現行人行走，
+      讓等待穿越馬路的人能直接判斷目前是通行狀態。本專案以 16x16 LED 點陣重建這種低解析度、逐格切換的視覺節奏。
+    </p>
+    <a href="https://zh.wikipedia.org/zh-tw/%E5%8B%95%E7%95%AB%E5%BC%8F%E8%A1%8C%E4%BA%BA%E5%B0%88%E7%94%A8%E8%99%9F%E8%AA%8C" target="_blank" rel="noreferrer">參考：動畫式行人專用號誌</a>
+  </section>
+`;
+
 app.innerHTML = `
   <div class="app">
     <header class="app-header">
       <div>
-        <h1 class="app-title">${isEditorRoute ? 'Taiwan Green Pedestrian LED Editor' : 'Taiwan Green Pedestrian'}</h1>
-        <div class="app-meta">16x16 / ${walkingFrames.length} frames</div>
+        <h1 class="app-title">${isEditorRoute ? '小綠人 LED 影格編輯器' : '小綠人 LED 動畫'}</h1>
+        <div class="app-meta">16x16 / ${walkingFrames.length} 個影格</div>
       </div>
       <nav class="top-menu" aria-label="Primary">
-        <a class="menu-link${isHomeRoute ? ' is-active' : ''}" href="${homeHref}">Player</a>
-        <a class="menu-link${isEditorRoute ? ' is-active' : ''}" href="${editorHref}">Editor</a>
+        <a class="menu-link${isHomeRoute ? ' is-active' : ''}" href="${homeHref}">播放</a>
+        <a class="menu-link${isEditorRoute ? ' is-active' : ''}" href="${editorHref}">編輯器</a>
       </nav>
     </header>
     <div class="workspace ${isEditorRoute ? 'workspace-editor' : 'workspace-player'}">
       ${isEditorRoute ? editorMarkup : playerMarkup}
     </div>
+    ${aboutMarkup}
   </div>
 `;
 
@@ -301,6 +341,7 @@ function startAnimation() {
     return;
   }
   animationRunning = true;
+  updatePlaybackButtons();
 
   function tick() {
     if (!animationRunning) {
@@ -323,6 +364,7 @@ function stopAnimation() {
     window.clearTimeout(animationTimer);
     animationTimer = null;
   }
+  updatePlaybackButtons();
 }
 
 function restartPlayback() {
@@ -333,19 +375,44 @@ function restartPlayback() {
 
 function rebuildFrameOptions() {
   if (!frameSelect) {
-    appMeta.textContent = `16x16 / ${walkingFrames.length} frames`;
+    appMeta.textContent = `16x16 / ${walkingFrames.length} 個影格`;
     return;
   }
   frameSelect.textContent = '';
   walkingFrames.forEach((_, index) => {
     const option = document.createElement('option');
     option.value = String(index);
-    option.textContent = `Frame ${index + 1}`;
+    option.textContent = `影格 ${index + 1}`;
     frameSelect.append(option);
   });
   selectedFrame = Math.min(selectedFrame, walkingFrames.length - 1);
   frameSelect.value = String(selectedFrame);
-  appMeta.textContent = `16x16 / ${walkingFrames.length} frames`;
+  appMeta.textContent = `16x16 / ${walkingFrames.length} 個影格`;
+}
+
+function updatePlaybackButtons() {
+  const stopButton = document.querySelector('.stop-button');
+  const restartButton = document.querySelector('.restart-button');
+  if (stopButton) {
+    stopButton.disabled = !animationRunning;
+  }
+  if (restartButton) {
+    restartButton.textContent = animationRunning ? '重新播放' : '播放';
+  }
+}
+
+function applyPalette(index) {
+  const palette = colorPalettes[index];
+  if (!palette) {
+    return;
+  }
+  currentPalette = index;
+  document.documentElement.style.setProperty('--led-on', palette.on);
+  document.documentElement.style.setProperty('--led-glow', palette.glow);
+  document.documentElement.style.setProperty('--led-off', palette.off);
+  document.querySelectorAll('.palette-button').forEach((button) => {
+    button.classList.toggle('is-active', Number(button.dataset.palette) === index);
+  });
 }
 
 function syncEditorFromFrame() {
@@ -485,7 +552,7 @@ function renderAllFrames() {
 
     const header = document.createElement('div');
     header.className = 'frame-card-header';
-    header.innerHTML = `<span>Frame ${index + 1}</span><span>${index === selectedFrame ? 'selected' : ''}</span>`;
+    header.innerHTML = `<span>影格 ${index + 1}</span><span>${index === selectedFrame ? '已選取' : ''}</span>`;
 
     const preview = document.createElement('button');
     preview.type = 'button';
@@ -502,12 +569,12 @@ function renderAllFrames() {
     actions.className = 'frame-card-actions';
     const upButton = document.createElement('button');
     upButton.type = 'button';
-    upButton.textContent = 'Up';
+    upButton.textContent = '上移';
     upButton.disabled = index === 0;
     upButton.addEventListener('click', () => moveFrame(index, -1));
     const downButton = document.createElement('button');
     downButton.type = 'button';
-    downButton.textContent = 'Down';
+    downButton.textContent = '下移';
     downButton.disabled = index === walkingFrames.length - 1;
     downButton.addEventListener('click', () => moveFrame(index, 1));
     actions.append(upButton, downButton);
@@ -553,6 +620,10 @@ function validateFrames(frames) {
 }
 
 document.querySelector('.restart-button')?.addEventListener('click', restartPlayback);
+document.querySelector('.stop-button')?.addEventListener('click', stopAnimation);
+document.querySelectorAll('.palette-button').forEach((button) => {
+  button.addEventListener('click', () => applyPalette(Number(button.dataset.palette)));
+});
 document.querySelector('.apply-matrix-button')?.addEventListener('click', applyMatrixText);
 document.querySelector('.copy-matrix-button')?.addEventListener('click', () => copyTextFrom(matrixText));
 document.querySelector('.copy-all-frames-button')?.addEventListener('click', () => copyTextFrom(allFramesText));
