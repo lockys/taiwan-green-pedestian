@@ -161,7 +161,6 @@ const playerMarkup = `
       <div class="led-grid" role="img" aria-label="動畫式小綠人 LED 點陣"></div>
     </div>
     <div class="player-controls">
-      <span class="status-dot" aria-hidden="true"></span>
       <button class="restart-button" type="button">重新播放</button>
       <button class="stop-button" type="button">停止</button>
     </div>

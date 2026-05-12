@@ -226,14 +226,6 @@ textarea:focus-visible,
   align-items: center;
 }
 
-.status-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--led-on);
-  box-shadow: 0 0 10px var(--led-glow);
-}
-
 .palette-panel {
   width: 100%;
   padding-top: 12px;
