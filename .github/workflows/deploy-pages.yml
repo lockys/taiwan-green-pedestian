@@ -32,8 +32,6 @@ jobs:
 
       - name: Build
         run: npm run build:pages
-        env:
-          ASSET_PREFIX: /${{ github.event.repository.name }}/
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
