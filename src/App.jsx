@@ -560,7 +560,7 @@ export default function App() {
               void i18n.changeLanguage(event.target.value);
             }}
           >
-            <option value="zh">??</option>
+            <option value="zh">{'\u7e41\u4e2d'}</option>
             <option value="en">EN</option>
           </select>
         </div>
