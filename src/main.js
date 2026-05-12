@@ -206,16 +206,18 @@ app.innerHTML = `
           <a class="menu-link${isHomeRoute ? ' is-active' : ''}" href="${homeHref}">${t('navPlayer')}</a>
           <a class="menu-link${isEditorRoute ? ' is-active' : ''}" href="${editorHref}">${t('navEditor')}</a>
         </nav>
-        <div class="language-switch" aria-label="${t('languageLabel')}">
-          <button class="language-button${currentLanguage === 'zh' ? ' is-active' : ''}" type="button" data-language="zh">繁中</button>
-          <button class="language-button${currentLanguage === 'en' ? ' is-active' : ''}" type="button" data-language="en">EN</button>
-        </div>
       </div>
     </header>
     <div class="workspace ${isEditorRoute ? 'workspace-editor' : 'workspace-player'}">
       ${isEditorRoute ? editorMarkup : playerMarkup}
     </div>
     ${isHomeRoute ? aboutMarkup : ''}
+    <footer class="app-footer">
+      <div class="language-switch" aria-label="${t('languageLabel')}">
+        <button class="language-button${currentLanguage === 'zh' ? ' is-active' : ''}" type="button" data-language="zh">繁中</button>
+        <button class="language-button${currentLanguage === 'en' ? ' is-active' : ''}" type="button" data-language="en">EN</button>
+      </div>
+    </footer>
   </div>
 `;
 

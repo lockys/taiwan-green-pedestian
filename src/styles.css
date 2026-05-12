@@ -150,6 +150,12 @@ textarea:focus-visible,
   box-shadow: 0 0 12px rgba(193, 240, 233, 0.24);
 }
 
+.app-footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 2px;
+}
+
 .workspace {
   display: grid;
   grid-template-columns: minmax(280px, 390px) minmax(0, 1fr);
@@ -486,13 +492,20 @@ textarea:focus-visible,
   }
 
   .header-actions,
-  .top-menu,
-  .language-switch {
+  .top-menu {
+    width: 100%;
+  }
+
+  .app-footer {
+    justify-content: stretch;
+  }
+
+  .app-footer .language-switch {
     width: 100%;
   }
 
   .menu-link,
-  .language-button {
+  .app-footer .language-button {
     flex: 1;
   }
 
