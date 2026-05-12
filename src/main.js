@@ -29,7 +29,7 @@ const translations = {
     play: 'Play',
     restart: 'Restart',
     stop: 'Stop',
-    paletteTitle: 'LED Palette',
+    paletteTitle: 'LED Color',
     ledAria: 'Animated green pedestrian LED matrix',
     editorHeading: 'Frame Matrix',
     frameLabel: 'Frame',
@@ -55,7 +55,7 @@ const translations = {
     toggleCellAria: 'Toggle row {row}, column {col}',
     aboutTitle: 'About Xiaoluren',
     aboutText:
-      'Xiaoluren is Taiwan’s familiar animated pedestrian signal. It uses sequential frames to show a walking person, helping people waiting to cross the road recognize the current crossing state. This project recreates that low-resolution, frame-switched rhythm as a 16x16 LED matrix.',
+      'Xiaoluren is the walking figure used on many pedestrian signals in Taiwan. The figure is shown as a short sequence of LED frames, so this page keeps the same simple 16x16 dot-matrix style.',
     aboutLink: 'Reference: Animated pedestrian traffic signal',
   },
   zh: {
@@ -68,7 +68,7 @@ const translations = {
     play: '播放',
     restart: '重新播放',
     stop: '停止',
-    paletteTitle: 'LED 色票',
+    paletteTitle: 'LED 顏色',
     ledAria: '動畫式小綠人 LED 點陣',
     editorHeading: '影格矩陣',
     frameLabel: '影格',
@@ -94,7 +94,7 @@ const translations = {
     toggleCellAria: '切換第 {row} 列第 {col} 欄',
     aboutTitle: '關於小綠人',
     aboutText:
-      '小綠人是台灣常見的動畫式行人專用號誌，以連續影格呈現行人行走，讓等待穿越馬路的人能直接判斷目前是通行狀態。本專案以 16x16 LED 點陣重建這種低解析度、逐格切換的視覺節奏。',
+      '小綠人是台灣路口常見的行人號誌。畫面由幾個 LED 影格連續切換，看起來像人在往前走；這裡用 16x16 點陣重做成簡化版本。',
     aboutLink: '參考：動畫式行人專用號誌',
   },
 };
