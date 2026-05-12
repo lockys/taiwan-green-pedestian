@@ -213,10 +213,11 @@ app.innerHTML = `
     </div>
     ${isHomeRoute ? aboutMarkup : ''}
     <footer class="app-footer">
-      <div class="language-switch" aria-label="${t('languageLabel')}">
-        <button class="language-button${currentLanguage === 'zh' ? ' is-active' : ''}" type="button" data-language="zh">繁中</button>
-        <button class="language-button${currentLanguage === 'en' ? ' is-active' : ''}" type="button" data-language="en">EN</button>
-      </div>
+      <label class="language-select-label" for="language-select">${t('languageLabel')}</label>
+      <select id="language-select" class="language-select" aria-label="${t('languageLabel')}">
+        <option value="zh"${currentLanguage === 'zh' ? ' selected' : ''}>繁中</option>
+        <option value="en"${currentLanguage === 'en' ? ' selected' : ''}>EN</option>
+      </select>
     </footer>
   </div>
 `;
@@ -591,11 +592,9 @@ document.querySelector('.play-toggle-button')?.addEventListener('click', toggleP
 document.querySelectorAll('.palette-button').forEach((button) => {
   button.addEventListener('click', () => applyPalette(Number(button.dataset.palette)));
 });
-document.querySelectorAll('.language-button').forEach((button) => {
-  button.addEventListener('click', () => {
-    window.localStorage.setItem('greenPedestrianLanguage', button.dataset.language);
-    window.location.reload();
-  });
+document.querySelector('.language-select')?.addEventListener('change', (event) => {
+  window.localStorage.setItem('greenPedestrianLanguage', event.target.value);
+  window.location.reload();
 });
 document.querySelector('.apply-matrix-button')?.addEventListener('click', applyMatrixText);
 document.querySelector('.copy-matrix-button')?.addEventListener('click', () => copyTextFrom(matrixText));

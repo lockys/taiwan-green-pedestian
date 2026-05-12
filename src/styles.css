@@ -106,17 +106,7 @@ textarea:focus-visible,
   background: #081410;
 }
 
-.language-switch {
-  display: flex;
-  gap: 4px;
-  padding: 4px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: #081410;
-}
-
-.menu-link,
-.language-button {
+.menu-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -130,21 +120,17 @@ textarea:focus-visible,
 }
 
 .menu-link:hover,
-.menu-link:focus-visible,
-.language-button:hover,
-.language-button:focus-visible {
+.menu-link:focus-visible {
   color: var(--text);
   background: #10241f;
 }
 
-.menu-link:focus-visible,
-.language-button:focus-visible {
+.menu-link:focus-visible {
   outline: 2px solid var(--led-on);
   outline-offset: 2px;
 }
 
-.menu-link.is-active,
-.language-button.is-active {
+.menu-link.is-active {
   color: #06110f;
   background: var(--led-on);
   box-shadow: 0 0 12px rgba(193, 240, 233, 0.24);
@@ -152,8 +138,22 @@ textarea:focus-visible,
 
 .app-footer {
   display: flex;
+  align-items: center;
   justify-content: center;
+  gap: 8px;
   padding-top: 2px;
+}
+
+.language-select-label {
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.language-select {
+  min-width: 120px;
+  padding: 0 30px 0 12px;
+  font-weight: 800;
 }
 
 .workspace {
@@ -497,16 +497,15 @@ textarea:focus-visible,
   }
 
   .app-footer {
-    justify-content: stretch;
+    justify-content: center;
   }
 
-  .app-footer .language-switch {
-    width: 100%;
-  }
-
-  .menu-link,
-  .app-footer .language-button {
+  .menu-link {
     flex: 1;
+  }
+
+  .language-select {
+    min-width: 150px;
   }
 
   .panel,
