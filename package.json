@@ -1,0 +1,15 @@
+{
+  "name": "green-pedestrian",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "rsbuild dev --host 127.0.0.1",
+    "build": "rsbuild build",
+    "build:pages": "rsbuild build && node scripts/prepare-pages.mjs",
+    "preview": "rsbuild preview --host 127.0.0.1"
+  },
+  "devDependencies": {
+    "@rsbuild/core": "^1.6.0"
+  }
+}
