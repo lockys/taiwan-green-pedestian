@@ -20,6 +20,7 @@ html,
 body {
   min-height: 100%;
   margin: 0;
+  overflow-x: hidden;
 }
 
 body {
@@ -63,7 +64,7 @@ textarea:focus-visible,
 }
 
 .app {
-  width: min(96vw, 1180px);
+  width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
   padding: 28px 0;
   display: grid;
@@ -484,7 +485,7 @@ textarea:focus-visible,
   }
 
   .app {
-    width: min(92vw, 560px);
+    width: min(560px, calc(100% - 24px));
     padding: 18px 0;
   }
 
