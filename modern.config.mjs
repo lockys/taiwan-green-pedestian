@@ -21,6 +21,9 @@ export default defineConfig({
     assetPrefix: process.env.ASSET_PREFIX || '/',
   },
   source: {
+    define: {
+      'process.env.IS_REACT18': JSON.stringify('true'),
+    },
     entries: {
       index: {
         entry: './src/main.jsx',

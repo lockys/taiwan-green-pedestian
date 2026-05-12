@@ -1,6 +1,5 @@
 import { startTransition, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useModernI18n } from '@modern-js/plugin-i18n/runtime';
 import walkingFrameRows from './frame.json';
 import './styles.css';
 
@@ -128,14 +127,14 @@ function PreviewGrid({ frame, label, onClick }) {
 }
 
 export default function App() {
-  const { t } = useTranslation();
-  const { language, changeLanguage } = useModernI18n();
+  const { t, i18n } = useTranslation();
   const [frames, setFrames] = useState(() => walkingFrameRows.map(rowsToMatrix));
   const [selectedFrame, setSelectedFrame] = useState(0);
   const [frameIndex, setFrameIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(true);
   const [currentPalette, setCurrentPalette] = useState(0);
   const [matrixText, setMatrixText] = useState('');
+  const [language, setLanguage] = useState(() => i18n.resolvedLanguage || i18n.language || 'zh');
 
   const routePath = window.location.pathname.replace(/\/$/, '') || '/';
   const route = routePath.endsWith('/editor') ? '/editor' : '/';
@@ -156,6 +155,17 @@ export default function App() {
   useEffect(() => {
     validateFrames(frames);
   }, [frames]);
+
+  useEffect(() => {
+    function handleLanguageChange(nextLanguage) {
+      setLanguage(nextLanguage);
+    }
+
+    i18n.on('languageChanged', handleLanguageChange);
+    return () => {
+      i18n.off('languageChanged', handleLanguageChange);
+    };
+  }, [i18n]);
 
   useEffect(() => {
     setSelectedFrame(prev => Math.min(prev, frames.length - 1));
@@ -448,7 +458,7 @@ export default function App() {
             aria-label={t('languageLabel')}
             value={language}
             onChange={event => {
-              void changeLanguage(event.target.value);
+              void i18n.changeLanguage(event.target.value);
             }}
           >
             <option value="zh">繁中</option>
