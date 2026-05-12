@@ -1,105 +1,25 @@
 import { startTransition, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useModernI18n } from '@modern-js/plugin-i18n/runtime';
 import walkingFrameRows from './frame.json';
 import './styles.css';
 
 const GRID_SIZE = 16;
 const FRAME_DELAY = 250;
-const LANGUAGE_KEY = 'greenPedestrianLanguage';
 
 const colorPalettes = [
-  { id: 'mint', name: { en: 'Mint', zh: '薄荷綠' }, on: '#c1f0e9', off: '#10221d', glow: 'rgba(193, 240, 233, 0.62)' },
-  { id: 'signal', name: { en: 'Signal Green', zh: '號誌綠' }, on: '#73ffbf', off: '#0b2117', glow: 'rgba(115, 255, 191, 0.64)' },
-  { id: 'cyan', name: { en: 'Cyan Green', zh: '青藍綠' }, on: '#7df8ff', off: '#0b2024', glow: 'rgba(125, 248, 255, 0.58)' },
-  { id: 'amber', name: { en: 'Amber', zh: '琥珀' }, on: '#ffe28a', off: '#241d0b', glow: 'rgba(255, 226, 138, 0.55)' },
+  { id: 'mint', on: '#c1f0e9', off: '#10221d', glow: 'rgba(193, 240, 233, 0.62)' },
+  { id: 'signal', on: '#73ffbf', off: '#0b2117', glow: 'rgba(115, 255, 191, 0.64)' },
+  { id: 'cyan', on: '#7df8ff', off: '#0b2024', glow: 'rgba(125, 248, 255, 0.58)' },
+  { id: 'amber', on: '#ffe28a', off: '#241d0b', glow: 'rgba(255, 226, 138, 0.55)' },
 ];
 
-const translations = {
-  en: {
-    playerTitle: 'Green Pedestrian LED Animation',
-    editorTitle: 'Green Pedestrian LED Frame Editor',
-    meta: '16x16 / {count} frames',
-    navPlayer: 'Player',
-    navEditor: 'Editor',
-    languageLabel: 'Language',
-    play: 'Play',
-    stop: 'Stop',
-    paletteTitle: 'LED Color',
-    ledAria: 'Animated green pedestrian LED matrix',
-    editorHeading: 'Frame Matrix',
-    frameLabel: 'Frame',
-    ledMatrixTitle: 'LED Matrix',
-    matrixTextTitle: 'Matrix Text',
-    applyText: 'Apply Text',
-    copyText: 'Copy Text',
-    clear: 'Clear',
-    shiftLeft: 'Left -1',
-    shiftRight: 'Right +1',
-    shiftUp: 'Up -1',
-    shiftDown: 'Down +1',
-    addBlank: 'Add Blank',
-    duplicateFrame: 'Duplicate Frame',
-    delete: 'Delete',
-    allFrames: 'All Frames',
-    copyAll: 'Copy All',
-    frameName: 'Frame {number}',
-    selected: 'selected',
-    moveUp: 'Up',
-    moveDown: 'Down',
-    github: 'GitHub',
-    selectFrameAria: 'Select frame {number}',
-    toggleCellAria: 'Toggle row {row}, column {col}',
-    aboutTitle: 'About Xiaoluren',
-    aboutText:
-      'Xiaoluren is the walking figure used on many pedestrian signals in Taiwan. The figure is shown as a short sequence of LED frames, so this page keeps the same simple 16x16 dot-matrix style.',
-    aboutLink: 'Reference: Animated pedestrian traffic signal',
-  },
-  zh: {
-    playerTitle: '小綠人 LED 動畫',
-    editorTitle: '小綠人 LED 影格編輯器',
-    meta: '16x16 / {count} 個影格',
-    navPlayer: '播放',
-    navEditor: '編輯器',
-    languageLabel: '語言',
-    play: '播放',
-    stop: '停止',
-    paletteTitle: 'LED 顏色',
-    ledAria: '動畫式小綠人 LED 點陣',
-    editorHeading: '影格矩陣',
-    frameLabel: '影格',
-    ledMatrixTitle: 'LED 點陣',
-    matrixTextTitle: '矩陣文字',
-    applyText: '套用文字',
-    copyText: '複製文字',
-    clear: '清空',
-    shiftLeft: '左移 -1',
-    shiftRight: '右移 +1',
-    shiftUp: '上移 -1',
-    shiftDown: '下移 +1',
-    addBlank: '新增空白',
-    duplicateFrame: '複製影格',
-    delete: '刪除',
-    allFrames: '全部影格',
-    copyAll: '全部複製',
-    frameName: '影格 {number}',
-    selected: '已選取',
-    moveUp: '上移',
-    moveDown: '下移',
-    github: 'GitHub',
-    selectFrameAria: '選取影格 {number}',
-    toggleCellAria: '切換第 {row} 列第 {col} 欄',
-    aboutTitle: '關於小綠人',
-    aboutText:
-      '小綠人是台灣路口常見的行人號誌。畫面由幾個 LED 影格連續切換，看起來像人在往前走；這裡用 16x16 點陣重做成簡化版本。',
-    aboutLink: '參考：動畫式行人專用號誌',
-  },
-};
-
 function rowsToMatrix(rows) {
-  return rows.map((row) => row.split('').map((value) => (value === '1' ? 1 : 0)));
+  return rows.map(row => row.split('').map(value => (value === '1' ? 1 : 0)));
 }
 
 function frameToRows(frame) {
-  return frame.map((row) => row.join(''));
+  return frame.map(row => row.join(''));
 }
 
 function blankFrame() {
@@ -107,7 +27,7 @@ function blankFrame() {
 }
 
 function cloneFrame(frame) {
-  return frame.map((row) => row.slice());
+  return frame.map(row => row.slice());
 }
 
 function parseMatrixText(value) {
@@ -208,8 +128,8 @@ function PreviewGrid({ frame, label, onClick }) {
 }
 
 export default function App() {
-  const initialLanguage = window.localStorage.getItem(LANGUAGE_KEY) === 'en' ? 'en' : 'zh';
-  const [language, setLanguage] = useState(initialLanguage);
+  const { t } = useTranslation();
+  const { language, changeLanguage } = useModernI18n();
   const [frames, setFrames] = useState(() => walkingFrameRows.map(rowsToMatrix));
   const [selectedFrame, setSelectedFrame] = useState(0);
   const [frameIndex, setFrameIndex] = useState(0);
@@ -225,7 +145,6 @@ export default function App() {
   const homeHref = `${basePath || ''}/`;
   const editorHref = `${basePath || ''}/editor`;
 
-  const copy = translations[language];
   const selectedPalette = colorPalettes[currentPalette];
   const selectedFrameData = frames[selectedFrame] || blankFrame();
   const visibleFrame = frames[frameIndex] || selectedFrameData;
@@ -234,21 +153,13 @@ export default function App() {
     [frames],
   );
 
-  function t(key, values = {}) {
-    return Object.entries(values).reduce((text, [name, value]) => text.replace(`{${name}}`, value), copy[key]);
-  }
-
-  useEffect(() => {
-    window.localStorage.setItem(LANGUAGE_KEY, language);
-  }, [language]);
-
   useEffect(() => {
     validateFrames(frames);
   }, [frames]);
 
   useEffect(() => {
-    setSelectedFrame((prev) => Math.min(prev, frames.length - 1));
-    setFrameIndex((prev) => Math.min(prev, frames.length - 1));
+    setSelectedFrame(prev => Math.min(prev, frames.length - 1));
+    setFrameIndex(prev => Math.min(prev, frames.length - 1));
   }, [frames.length]);
 
   useEffect(() => {
@@ -261,7 +172,7 @@ export default function App() {
     }
 
     const timer = window.setTimeout(() => {
-      setFrameIndex((prev) => (prev + 1) % frames.length);
+      setFrameIndex(prev => (prev + 1) % frames.length);
     }, FRAME_DELAY);
 
     return () => window.clearTimeout(timer);
@@ -275,12 +186,12 @@ export default function App() {
 
   function updateFrames(updater) {
     startTransition(() => {
-      setFrames((prev) => updater(prev.map(cloneFrame)));
+      setFrames(prev => updater(prev.map(cloneFrame)));
     });
   }
 
   function toggleEditorCell(row, col) {
-    updateFrames((nextFrames) => {
+    updateFrames(nextFrames => {
       const frame = nextFrames[selectedFrame];
       frame[row][col] = frame[row][col] === 1 ? 0 : 1;
       return nextFrames;
@@ -293,40 +204,40 @@ export default function App() {
       return;
     }
 
-    updateFrames((nextFrames) => {
+    updateFrames(nextFrames => {
       nextFrames[selectedFrame] = nextFrame;
       return nextFrames;
     });
   }
 
   function clearFrame() {
-    updateFrames((nextFrames) => {
+    updateFrames(nextFrames => {
       nextFrames[selectedFrame] = blankFrame();
       return nextFrames;
     });
   }
 
   function shiftSelectedFrame(rowDirection, colDirection) {
-    updateFrames((nextFrames) => {
+    updateFrames(nextFrames => {
       nextFrames[selectedFrame] = shiftFrame(nextFrames[selectedFrame], rowDirection, colDirection);
       return nextFrames;
     });
   }
 
   function addBlankFrame() {
-    updateFrames((nextFrames) => {
+    updateFrames(nextFrames => {
       nextFrames.splice(selectedFrame + 1, 0, blankFrame());
       return nextFrames;
     });
-    setSelectedFrame((prev) => prev + 1);
+    setSelectedFrame(prev => prev + 1);
   }
 
   function duplicateFrame() {
-    updateFrames((nextFrames) => {
+    updateFrames(nextFrames => {
       nextFrames.splice(selectedFrame + 1, 0, cloneFrame(nextFrames[selectedFrame]));
       return nextFrames;
     });
-    setSelectedFrame((prev) => prev + 1);
+    setSelectedFrame(prev => prev + 1);
   }
 
   function deleteFrame() {
@@ -335,11 +246,11 @@ export default function App() {
       return;
     }
 
-    updateFrames((nextFrames) => {
+    updateFrames(nextFrames => {
       nextFrames.splice(selectedFrame, 1);
       return nextFrames;
     });
-    setSelectedFrame((prev) => Math.min(prev, frames.length - 2));
+    setSelectedFrame(prev => Math.min(prev, frames.length - 2));
   }
 
   function moveFrame(fromIndex, direction) {
@@ -348,13 +259,13 @@ export default function App() {
       return;
     }
 
-    updateFrames((nextFrames) => {
+    updateFrames(nextFrames => {
       const [frame] = nextFrames.splice(fromIndex, 1);
       nextFrames.splice(toIndex, 0, frame);
       return nextFrames;
     });
     setSelectedFrame(toIndex);
-    setFrameIndex((prev) => Math.min(prev, frames.length - 1));
+    setFrameIndex(prev => Math.min(prev, frames.length - 1));
   }
 
   return (
@@ -377,7 +288,7 @@ export default function App() {
 
       <div className={`workspace ${isEditorRoute ? 'workspace-editor' : 'workspace-player'}`}>
         {isEditorRoute ? (
-          <section className="panel editor-panel" aria-label="16 by 16 matrix editor">
+          <section className="panel editor-panel" aria-label={t('editorAria')}>
             <div className="editor-header">
               <h2 className="editor-title">{t('editorHeading')}</h2>
               <div className="frame-tools">
@@ -386,7 +297,7 @@ export default function App() {
                   id="frame-select"
                   className="frame-select"
                   value={selectedFrame}
-                  onChange={(event) => setSelectedFrame(Number(event.target.value))}
+                  onChange={event => setSelectedFrame(Number(event.target.value))}
                 >
                   {frames.map((_, index) => (
                     <option key={index} value={index}>
@@ -400,7 +311,13 @@ export default function App() {
             <div className="editor-body">
               <div className="editor-section editor-matrix-section">
                 <h3 className="section-title">{t('ledMatrixTitle')}</h3>
-                <LedMatrix frame={selectedFrameData} interactive ariaLabel="Clickable frame matrix" onToggle={toggleEditorCell} t={t} />
+                <LedMatrix
+                  frame={selectedFrameData}
+                  interactive
+                  ariaLabel={t('clickableMatrixAria')}
+                  onToggle={toggleEditorCell}
+                  t={t}
+                />
               </div>
 
               <div className="editor-section editor-text-section">
@@ -408,9 +325,9 @@ export default function App() {
                 <textarea
                   className="matrix-text"
                   spellCheck="false"
-                  aria-label="Raw 16 by 16 matrix rows"
+                  aria-label={t('matrixRowsAria')}
                   value={matrixText}
-                  onChange={(event) => setMatrixText(event.target.value)}
+                  onChange={event => setMatrixText(event.target.value)}
                 />
                 <div className="editor-actions">
                   <button type="button" className="apply-matrix-button" onClick={applyMatrixText}>
@@ -454,7 +371,7 @@ export default function App() {
                   {t('copyAll')}
                 </button>
               </div>
-              <div className="frame-list" aria-label="All walking frames">
+              <div className="frame-list" aria-label={t('allFramesAria')}>
                 {frames.map((frame, index) => (
                   <article key={index} className={`frame-card${index === selectedFrame ? ' is-selected' : ''}`}>
                     <div className="frame-card-header">
@@ -477,7 +394,7 @@ export default function App() {
                   </article>
                 ))}
               </div>
-              <textarea className="all-frames-text" readOnly spellCheck="false" aria-label="All frame matrices" value={allFramesText} />
+              <textarea className="all-frames-text" readOnly spellCheck="false" aria-label={t('allFramesTextAria')} value={allFramesText} />
             </div>
           </section>
         ) : (
@@ -486,7 +403,7 @@ export default function App() {
               <LedMatrix frame={visibleFrame} ariaLabel={t('ledAria')} t={t} />
             </div>
             <div className="player-controls">
-              <button type="button" className="play-toggle-button" aria-pressed={isAnimating} onClick={() => setIsAnimating((prev) => !prev)}>
+              <button type="button" className="play-toggle-button" aria-pressed={isAnimating} onClick={() => setIsAnimating(prev => !prev)}>
                 {isAnimating ? t('stop') : t('play')}
               </button>
             </div>
@@ -501,7 +418,7 @@ export default function App() {
                     onClick={() => setCurrentPalette(index)}
                   >
                     <span className="palette-swatch" style={{ '--swatch-color': palette.on }} />
-                    {palette.name[language]}
+                    {t(`palette.${palette.id}`)}
                   </button>
                 ))}
               </div>
@@ -525,7 +442,15 @@ export default function App() {
           <label className="language-select-label" htmlFor="language-select">
             {t('languageLabel')}
           </label>
-          <select id="language-select" className="language-select" aria-label={t('languageLabel')} value={language} onChange={(event) => setLanguage(event.target.value)}>
+          <select
+            id="language-select"
+            className="language-select"
+            aria-label={t('languageLabel')}
+            value={language}
+            onChange={event => {
+              void changeLanguage(event.target.value);
+            }}
+          >
             <option value="zh">繁中</option>
             <option value="en">EN</option>
           </select>
