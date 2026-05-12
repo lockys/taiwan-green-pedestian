@@ -2,6 +2,7 @@
   "name": "green-pedestrian",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "rsbuild dev --host 127.0.0.1",

@@ -2,6 +2,13 @@
 
 A small Rsbuild app for a 16x16 Taiwan-style green pedestrian LED animation.
 
+## Inspiration
+
+This project is inspired by Taiwan's animated pedestrian signal, commonly known as
+the "小綠人". The animation uses seven low-resolution walking frames, following the
+frame-by-frame LED style described in the Wikipedia article
+[動畫式行人專用號誌](https://zh.wikipedia.org/zh-tw/%E5%8B%95%E7%95%AB%E5%BC%8F%E8%A1%8C%E4%BA%BA%E5%B0%88%E7%94%A8%E8%99%9F%E8%AA%8C).
+
 ## Routes
 
 | Route | Description |
@@ -17,6 +24,10 @@ A small Rsbuild app for a 16x16 Taiwan-style green pedestrian LED animation.
 | `npm run build` | Build the app into `dist` |
 | `npm run build:pages` | Build for GitHub Pages and create `/editor/index.html` |
 | `npm run preview` | Preview the production build locally |
+
+## License
+
+MIT
 
 ## Frame Data
 
