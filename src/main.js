@@ -143,10 +143,9 @@ const routePath = window.location.pathname.replace(/\/$/, '') || '/';
 const route = routePath.endsWith('/editor') ? '/editor' : '/';
 const isEditorRoute = route === '/editor';
 const isHomeRoute = route === '/';
-
-if (!isHomeRoute && !isEditorRoute) {
-  window.history.replaceState(null, '', '/');
-}
+const basePath = isEditorRoute ? routePath.slice(0, -'/editor'.length) : routePath === '/' ? '' : routePath;
+const homeHref = `${basePath || ''}/`;
+const editorHref = `${basePath || ''}/editor`;
 
 const playerMarkup = `
   <section class="panel player-panel" aria-label="LED animation player">
@@ -204,8 +203,8 @@ app.innerHTML = `
         <div class="app-meta">16x16 / ${walkingFrames.length} frames</div>
       </div>
       <nav class="top-menu" aria-label="Primary">
-        <a class="menu-link${isHomeRoute ? ' is-active' : ''}" href="/">Player</a>
-        <a class="menu-link${isEditorRoute ? ' is-active' : ''}" href="/editor">Editor</a>
+        <a class="menu-link${isHomeRoute ? ' is-active' : ''}" href="${homeHref}">Player</a>
+        <a class="menu-link${isEditorRoute ? ' is-active' : ''}" href="${editorHref}">Editor</a>
       </nav>
     </header>
     <div class="workspace ${isEditorRoute ? 'workspace-editor' : 'workspace-player'}">
