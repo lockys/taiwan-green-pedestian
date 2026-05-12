@@ -5,12 +5,12 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "rsbuild dev --host 127.0.0.1",
-    "build": "rsbuild build",
-    "build:pages": "rsbuild build && node scripts/prepare-pages.mjs",
-    "preview": "rsbuild preview --host 127.0.0.1"
+    "dev": "modern dev",
+    "build": "modern build",
+    "build:pages": "modern build && node scripts/prepare-pages.mjs",
+    "preview": "modern serve"
   },
   "devDependencies": {
-    "@rsbuild/core": "^1.6.0"
+    "@modern-js/app-tools": "^3.1.5"
   }
 }

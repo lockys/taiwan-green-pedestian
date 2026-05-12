@@ -2,7 +2,7 @@
 
 [English README](README-EN.md)
 
-一個使用 Rsbuild 製作的 16x16 台灣小綠人 LED 點陣動畫與影格編輯器。
+一個使用 Modern.js 製作的 16x16 台灣小綠人 LED 點陣動畫與影格編輯器。
 
 ## 靈感來源
 
@@ -21,7 +21,7 @@
 
 | 指令 | 說明 |
 | --- | --- |
-| `npm run dev` | 啟動本機 Rsbuild 開發伺服器 |
+| `npm run dev` | 啟動本機 Modern.js 開發伺服器 |
 | `npm run build` | 建置到 `dist` |
 | `npm run build:pages` | 建置 GitHub Pages 版本，並產生 `/editor/index.html` 與 fallback 檔案 |
 | `npm run preview` | 預覽 production build |

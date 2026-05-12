@@ -2,7 +2,7 @@
 
 [繁體中文 README](README.md)
 
-A small Rsbuild app for a 16x16 Taiwan-style green pedestrian LED animation and frame editor.
+A small Modern.js app for a 16x16 Taiwan-style green pedestrian LED animation and frame editor.
 
 ## Inspiration
 
@@ -21,7 +21,7 @@ Reference: [動畫式行人專用號誌](https://zh.wikipedia.org/zh-tw/%E5%8B%9
 
 | Command | Description |
 | --- | --- |
-| `npm run dev` | Start the local Rsbuild dev server |
+| `npm run dev` | Start the local Modern.js dev server |
 | `npm run build` | Build the app into `dist` |
 | `npm run build:pages` | Build for GitHub Pages and create `/editor/index.html` plus fallback files |
 | `npm run preview` | Preview the production build locally |
