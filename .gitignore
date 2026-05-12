@@ -3,3 +3,4 @@ dist/
 .rsbuild-dev*.log
 modern-dev-check*.log
 /.codex
+*.log
