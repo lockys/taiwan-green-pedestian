@@ -90,6 +90,13 @@ textarea:focus-visible,
   font: 700 0.84rem/1.2 Consolas, "Lucida Console", monospace;
 }
 
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .top-menu {
   display: flex;
   gap: 6px;
@@ -99,7 +106,17 @@ textarea:focus-visible,
   background: #081410;
 }
 
-.menu-link {
+.language-switch {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #081410;
+}
+
+.menu-link,
+.language-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -113,17 +130,21 @@ textarea:focus-visible,
 }
 
 .menu-link:hover,
-.menu-link:focus-visible {
+.menu-link:focus-visible,
+.language-button:hover,
+.language-button:focus-visible {
   color: var(--text);
   background: #10241f;
 }
 
-.menu-link:focus-visible {
+.menu-link:focus-visible,
+.language-button:focus-visible {
   outline: 2px solid var(--led-on);
   outline-offset: 2px;
 }
 
-.menu-link.is-active {
+.menu-link.is-active,
+.language-button.is-active {
   color: #06110f;
   background: var(--led-on);
   box-shadow: 0 0 12px rgba(193, 240, 233, 0.24);
@@ -444,11 +465,14 @@ textarea:focus-visible,
     flex-direction: column;
   }
 
-  .top-menu {
+  .header-actions,
+  .top-menu,
+  .language-switch {
     width: 100%;
   }
 
-  .menu-link {
+  .menu-link,
+  .language-button {
     flex: 1;
   }
 
