@@ -1,6 +1,6 @@
 :root {
   --cell-size: clamp(11px, 1.5vw, 15px);
-  --editor-cell-size: 18px;
+  --editor-cell-size: clamp(14px, 1.9vw, 18px);
   --led-on: #c1f0e9;
   --led-off: #10221d;
   --led-glow: rgba(193, 240, 233, 0.62);
@@ -163,7 +163,7 @@ textarea:focus-visible,
 }
 
 .workspace-editor {
-  grid-template-columns: minmax(0, 920px);
+  grid-template-columns: minmax(0, 1080px);
   justify-content: center;
 }
 
@@ -309,7 +309,7 @@ textarea:focus-visible,
 
 .editor-body {
   display: grid;
-  grid-template-columns: max-content minmax(230px, 1fr);
+  grid-template-columns: minmax(360px, max-content) minmax(320px, 1fr);
   gap: 20px;
   align-items: start;
 }
@@ -332,9 +332,12 @@ textarea:focus-visible,
   grid-template-rows: repeat(16, var(--editor-cell-size));
   gap: 5px;
   padding: 8px;
+  width: max-content;
+  max-width: 100%;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: #030807;
+  overflow: hidden;
 }
 
 .editor-cell {
@@ -347,6 +350,7 @@ textarea:focus-visible,
 .matrix-text,
 .all-frames-text {
   width: 100%;
+  max-width: 100%;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: #06110f;
@@ -437,6 +441,10 @@ textarea:focus-visible,
     grid-template-columns: 1fr;
   }
 
+  .workspace-editor {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .player-panel {
     justify-items: stretch;
   }
@@ -446,6 +454,15 @@ textarea:focus-visible,
   .palette-panel {
     justify-self: center;
     width: min(100%, 390px);
+  }
+
+  .editor-body {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-matrix-section {
+    display: grid;
+    justify-items: center;
   }
 }
 
@@ -480,11 +497,6 @@ textarea:focus-visible,
   .editor-section,
   .all-frames {
     border-radius: 6px;
-  }
-
-  .editor-body {
-    grid-template-columns: 1fr;
-    gap: 14px;
   }
 
   .editor-grid {
