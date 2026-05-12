@@ -178,6 +178,16 @@ const editorMarkup = `
   </section>
 `;
 
+const aboutMarkup = `
+  <section class="panel about-panel" aria-label="About animated pedestrian signal">
+    <h2 class="section-title">${t('aboutTitle')}</h2>
+    <p>
+      ${t('aboutText')}
+    </p>
+    <a href="https://zh.wikipedia.org/zh-tw/%E5%8B%95%E7%95%AB%E5%BC%8F%E8%A1%8C%E4%BA%BA%E5%B0%88%E7%94%A8%E8%99%9F%E8%AA%8C" target="_blank" rel="noreferrer">${t('aboutLink')}</a>
+  </section>
+`;
+
 app.innerHTML = `
   <div class="app">
     <header class="app-header">
@@ -199,6 +209,7 @@ app.innerHTML = `
     <div class="workspace ${isEditorRoute ? 'workspace-editor' : 'workspace-player'}">
       ${isEditorRoute ? editorMarkup : playerMarkup}
     </div>
+    ${isHomeRoute ? aboutMarkup : ''}
   </div>
 `;
 

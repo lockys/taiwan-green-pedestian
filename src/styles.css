@@ -180,6 +180,28 @@ textarea:focus-visible,
   padding: 18px;
 }
 
+.about-panel {
+  padding: 16px 18px;
+}
+
+.about-panel p {
+  max-width: 76ch;
+  margin: 8px 0 10px;
+  color: var(--muted);
+  font-size: 0.96rem;
+  line-height: 1.7;
+}
+
+.about-panel a {
+  color: var(--led-on);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.about-panel a:hover {
+  text-decoration: underline;
+}
+
 .matrix-panel {
   display: grid;
   place-items: center;
