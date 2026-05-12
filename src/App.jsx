@@ -13,6 +13,10 @@ const colorPalettes = [
   { id: 'amber', on: '#ffe28a', off: '#241d0b', glow: 'rgba(255, 226, 138, 0.55)' },
 ];
 
+const DEFAULT_IMPORT_TEXT = walkingFrameRows
+  .map((rows, index) => `frame ${index + 1}:\n${rows.join('\n')}`)
+  .join('\n\n');
+
 function rowsToMatrix(rows) {
   return rows.map(row => row.split('').map(value => (value === '1' ? 1 : 0)));
 }
@@ -36,6 +40,25 @@ function parseMatrixText(value) {
     return null;
   }
   return rowsToMatrix(rows);
+}
+
+function parseFramesText(value) {
+  const rows = value.match(/[01]{16}/g) || [];
+  if (rows.length === 0 || rows.length % GRID_SIZE !== 0) {
+    console.warn('Frame import expected one or more 16x16 matrices.');
+    return null;
+  }
+
+  const nextFrames = [];
+  for (let index = 0; index < rows.length; index += GRID_SIZE) {
+    nextFrames.push(rowsToMatrix(rows.slice(index, index + GRID_SIZE)));
+  }
+
+  if (!validateFrames(nextFrames)) {
+    return null;
+  }
+
+  return nextFrames;
 }
 
 function validateFrame(frame, frameIndexForMessage) {
@@ -134,6 +157,8 @@ export default function App() {
   const [isAnimating, setIsAnimating] = useState(true);
   const [currentPalette, setCurrentPalette] = useState(0);
   const [matrixText, setMatrixText] = useState('');
+  const [importText, setImportText] = useState(DEFAULT_IMPORT_TEXT);
+  const [isImportSheetOpen, setIsImportSheetOpen] = useState(false);
   const [language, setLanguage] = useState(() => i18n.resolvedLanguage || i18n.language || 'zh');
 
   const routePath = window.location.pathname.replace(/\/$/, '') || '/';
@@ -187,6 +212,19 @@ export default function App() {
 
     return () => window.clearTimeout(timer);
   }, [frameIndex, frames.length, isAnimating, isHomeRoute]);
+
+  useEffect(() => {
+    if (!isHomeRoute || !isImportSheetOpen) {
+      return undefined;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isHomeRoute, isImportSheetOpen]);
 
   const appStyle = {
     '--led-on': selectedPalette.on,
@@ -276,6 +314,30 @@ export default function App() {
     });
     setSelectedFrame(toIndex);
     setFrameIndex(prev => Math.min(prev, frames.length - 1));
+  }
+
+  function openImportSheet() {
+    setImportText(allFramesText);
+    setIsImportSheetOpen(true);
+  }
+
+  function closeImportSheet() {
+    setIsImportSheetOpen(false);
+  }
+
+  function applyImportedFrames() {
+    const nextFrames = parseFramesText(importText);
+    if (!nextFrames) {
+      return;
+    }
+
+    startTransition(() => {
+      setFrames(nextFrames);
+    });
+    setSelectedFrame(0);
+    setFrameIndex(0);
+    setIsAnimating(true);
+    setIsImportSheetOpen(false);
   }
 
   return (
@@ -413,6 +475,9 @@ export default function App() {
               <LedMatrix frame={visibleFrame} ariaLabel={t('ledAria')} t={t} />
             </div>
             <div className="player-controls">
+              <button type="button" className="import-sheet-button" onClick={openImportSheet}>
+                {t('importFrames')}
+              </button>
               <button type="button" className="play-toggle-button" aria-pressed={isAnimating} onClick={() => setIsAnimating(prev => !prev)}>
                 {isAnimating ? t('stop') : t('play')}
               </button>
@@ -447,6 +512,40 @@ export default function App() {
         </section>
       ) : null}
 
+      {isHomeRoute ? (
+        <div className={`bottom-sheet-backdrop${isImportSheetOpen ? ' is-open' : ''}`} onClick={closeImportSheet} aria-hidden={!isImportSheetOpen}>
+          <section
+            className={`bottom-sheet${isImportSheetOpen ? ' is-open' : ''}`}
+            aria-label={t('importSheetTitle')}
+            onClick={event => event.stopPropagation()}
+          >
+            <div className="bottom-sheet-handle" />
+            <div className="bottom-sheet-header">
+              <h2 className="section-title">{t('importSheetTitle')}</h2>
+              <button type="button" className="bottom-sheet-close-button" onClick={closeImportSheet}>
+                {t('close')}
+              </button>
+            </div>
+            <p className="bottom-sheet-copy">{t('importSheetHelp')}</p>
+            <textarea
+              className="bottom-sheet-textarea"
+              spellCheck="false"
+              aria-label={t('importSheetTitle')}
+              value={importText}
+              onChange={event => setImportText(event.target.value)}
+            />
+            <div className="bottom-sheet-actions">
+              <button type="button" className="clear-frame-button" onClick={() => setImportText('')}>
+                {t('clear')}
+              </button>
+              <button type="button" className="apply-matrix-button" onClick={applyImportedFrames}>
+                {t('applyImportedFrames')}
+              </button>
+            </div>
+          </section>
+        </div>
+      ) : null}
+
       <footer className="app-footer">
         <div className="footer-controls">
           <label className="language-select-label" htmlFor="language-select">
@@ -461,7 +560,7 @@ export default function App() {
               void i18n.changeLanguage(event.target.value);
             }}
           >
-            <option value="zh">繁中</option>
+            <option value="zh">??</option>
             <option value="en">EN</option>
           </select>
         </div>
