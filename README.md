@@ -1,34 +1,68 @@
-# 小綠人 LED 點陣動畫
+# Green Pedestrian LED Matrix / 小綠人 LED 點陣動畫
+
+## English
+
+A small Rsbuild app for a 16x16 Taiwan-style green pedestrian LED animation and frame editor.
+
+### Inspiration
+
+This project is inspired by Taiwan's animated pedestrian signal, commonly known as "Xiaoluren" or "Little Green Man". The signal uses sequential low-resolution frames to show a walking pedestrian and help people recognize the current crossing state.
+
+Reference: [動畫式行人專用號誌](https://zh.wikipedia.org/zh-tw/%E5%8B%95%E7%95%AB%E5%BC%8F%E8%A1%8C%E4%BA%BA%E5%B0%88%E7%94%A8%E8%99%9F%E8%AA%8C)
+
+### Routes
+
+| Route | Description |
+| --- | --- |
+| `/` | LED animation player |
+| `/editor` | 16x16 frame matrix editor |
+
+### Scripts
+
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the local Rsbuild dev server |
+| `npm run build` | Build the app into `dist` |
+| `npm run build:pages` | Build for GitHub Pages and create `/editor/index.html` plus fallback files |
+| `npm run preview` | Preview the production build locally |
+
+### License
+
+MIT
+
+## 繁體中文
 
 一個使用 Rsbuild 製作的 16x16 台灣小綠人 LED 點陣動畫與影格編輯器。
 
-## 靈感來源
+### 靈感來源
 
 本專案的靈感來自台灣常見的動畫式行人專用號誌，也就是「小綠人」。小綠人以連續的低解析度影格呈現行人行走狀態，讓路口等待通行的人可以快速辨識目前是否可通行。
 
 參考資料：[動畫式行人專用號誌](https://zh.wikipedia.org/zh-tw/%E5%8B%95%E7%95%AB%E5%BC%8F%E8%A1%8C%E4%BA%BA%E5%B0%88%E7%94%A8%E8%99%9F%E8%AA%8C)
 
-## 路由
+### 路由
 
 | 路由 | 說明 |
 | --- | --- |
 | `/` | 小綠人 LED 動畫播放頁 |
 | `/editor` | 16x16 影格矩陣編輯器 |
 
-## 指令
+### 指令
 
 | 指令 | 說明 |
 | --- | --- |
 | `npm run dev` | 啟動本機 Rsbuild 開發伺服器 |
 | `npm run build` | 建置到 `dist` |
-| `npm run build:pages` | 建置 GitHub Pages 版本，並產生 `/editor/index.html` |
+| `npm run build:pages` | 建置 GitHub Pages 版本，並產生 `/editor/index.html` 與 fallback 檔案 |
 | `npm run preview` | 預覽 production build |
 
-## 授權
+### 授權
 
 MIT
 
-## 影格資料
+## Frame Data / 影格資料
+
+Each frame is a 16x16 LED matrix. `1` means LED on, `0` means LED off.
 
 每一個影格都是 16x16 LED 矩陣。`1` 代表 LED 亮起，`0` 代表 LED 關閉。
 
@@ -88,9 +122,9 @@ MIT
 0000001011000000
 0000000111000000
 0000001101100000
-0000011000110000
-0000001100011000
-0000000100001000
+0000011000111000
+0000001100001000
+0000000100011000
 0000011100000000
 0000000000000000
 ```
