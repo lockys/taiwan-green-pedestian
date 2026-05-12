@@ -577,6 +577,25 @@ textarea:focus-visible,
     min-height: 0;
   }
 
+  .matrix-panel {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px;
+  }
+
+  .led-grid {
+    grid-template-columns: repeat(16, minmax(0, 1fr));
+    grid-template-rows: repeat(16, 1fr);
+    width: 100%;
+    aspect-ratio: 1;
+    gap: 3px;
+  }
+
+  .led {
+    width: auto;
+    height: auto;
+  }
+
   .matrix-text {
     min-height: 260px;
     font-size: 0.82rem;

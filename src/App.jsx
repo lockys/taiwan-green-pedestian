@@ -473,6 +473,14 @@ export default function App() {
         >
           {t('github')}
         </a>
+        <a
+          className="github-link"
+          href="https://github.com/lockys"
+          target="_blank"
+          rel="noreferrer"
+        >
+          built by lockys
+        </a>
       </footer>
     </div>
   );
